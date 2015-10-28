@@ -32,15 +32,15 @@ public class NewsController {
 	 * find all articles for a specific keyword  
 	 */
 	 
-		@RequestMapping(method=RequestMethod.GET)
+		@RequestMapping(value="/",method=RequestMethod.GET)
 	    @ResponseBody
-	    @ApiOperation(value = "Get News Articles", notes = "get News Article")
+	    @ApiOperation(value = "Get News Articles by keyword or date span", notes = "Get News Article")
 		@ApiResponses(value = {
 	            @ApiResponse(code = 400, message = "parameters missing")
 	            })
 	   List<NewsArticle> getNews(@RequestParam(value="keyword", required=true) String keyword,
 			   					 @RequestParam(value="dateFrom", required=true, defaultValue="none") String dateFrom,
-			   					@RequestParam(value="dateFrom", required=true, defaultValue="none") String dateTo
+			   					@RequestParam(value="dateTo", required=true, defaultValue="none") String dateTo
 			   ) {
 			if(keyword !=null) {
 				
@@ -56,7 +56,7 @@ public class NewsController {
 		 *  allow an editor to create/update/delete an article  
 		*/
 		
-		@RequestMapping(method=RequestMethod.POST)
+		@RequestMapping(value="/",method=RequestMethod.POST)
 	    @ResponseBody
 	    @ResponseStatus(HttpStatus.CREATED)
 	    @ApiOperation(value = "Create new News Article", notes = "Creates new News Article")
@@ -66,21 +66,29 @@ public class NewsController {
 	    void addNews(@RequestParam(value="news", required=true) NewsArticle news) {
 			
 	    }
-//		
-//		@RequestMapping(method=RequestMethod.DELETE)
-//	    @ResponseBody
-//	    void DeleteNews(@RequestParam(value="id", required=true) String newsId) {
-//			
-//	    }
-//		
-//		/*
-//		 * This method fullfills the use case:
-//		 * display one article  
-//		 */
-//		
-//		@RequestMapping("/{id}")
-//	    @ResponseBody
-//	    NewsArticle getNewsArticle(@RequestParam(value="id", required=true, defaultValue="0") String name) {
-//			return new NewsArticle();
-//	    }
+		
+		@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
+		@ApiOperation(value = "Delete News Article of given ID", notes = "delete a News Article")
+	    @ResponseBody
+	    @ApiResponses(value = {
+	            @ApiResponse(code = 400, message = "Wrong parameters"),
+	            @ApiResponse(code = 201, message = "") })
+	    void DeleteNews(@RequestParam(value="id", required=true) String newsId) {
+			
+	    }
+		
+		/*
+		 * This method fullfills the use case:
+		 * display one article  
+		 */
+		
+		@RequestMapping(value="/{id}",method=RequestMethod.GET)
+		@ApiOperation(value = "Delete News Article of given ID", notes = "delete a News Article")
+		@ApiResponses(value = {
+	            @ApiResponse(code = 400, message = "Wrong News Article ID"),
+	            @ApiResponse(code = 201, message = "") })
+	    @ResponseBody
+	    NewsArticle getNewsArticle(@RequestParam(value="id", required=true, defaultValue="0") String name) {
+			return new NewsArticle();
+	    }
 	}
