@@ -13,35 +13,27 @@ import com.example.news.dto.NewsArticle;
 
 @Controller
 @EnableAutoConfiguration
-@RequestMapping("/author")
+@RequestMapping("/api/author")
 public class ArticleAuthorController {
 
 	
 	/*
- 
-	list all articles for a given author  
-	list all articles for a given period  
-	find all articles for a specific keyword  
+	*  List all articles for a given author  - from the authors point of view
+	*  (Assumption is that author is an aggregate)
 	*/
-	
-	
 		@RequestMapping(method=RequestMethod.GET)
 	    @ResponseBody
-	   List<NewsArticle> getAllNews() {
+	   List<NewsArticle> getAllAuthors() {
 			List<NewsArticle> allNews = new ArrayList<NewsArticle>();
 			allNews.add(new NewsArticle());
 	        return allNews;
 	    }
 		
-		@RequestMapping(method=RequestMethod.POST)
+		@RequestMapping("/{id}/news")
 	    @ResponseBody
-	    void putNews(@RequestParam(value="news", required=true) NewsArticle news) {
-			
-	    }
-		
-		@RequestMapping("/{id}")
-	    @ResponseBody
-	    NewsArticle getNews(@RequestParam(value="id", required=true, defaultValue="0") String name) {
-			return new NewsArticle();
+	    List<NewsArticle> getNews(@RequestParam(value="id", required=true, defaultValue="0") String name) {
+			List<NewsArticle> allNews = new ArrayList<NewsArticle>();
+			allNews.add(new NewsArticle());
+			return allNews;
 	    }
 	}
