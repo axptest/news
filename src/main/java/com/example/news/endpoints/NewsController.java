@@ -1,11 +1,13 @@
 package com.example.news.endpoints;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +46,8 @@ public class NewsController {
 	 * This method fullfills the use cases:
 	 * list all articles for a given period  
 	 * find all articles for a specific keyword  
+	 * 
+	 * if the keyword is present, it takes the precedence
 	 */
 	 	@RequestMapping(value="/",method=RequestMethod.GET)
 	    @ResponseBody
@@ -52,20 +56,22 @@ public class NewsController {
 	            @ApiResponse(code = 400, message = "wrong parameters")
 	            })
 	   List<NewsArticle> getNews(@RequestParam(value="keyword", required=false) String keyword,
-			   					 @RequestParam(value="dateFrom", required=false, defaultValue="none") String dateFrom,
-			   					@RequestParam(value="dateTo", required=false, defaultValue="none") String dateTo
+			   @DateTimeFormat(pattern="yyyy-MM-dd") @RequestParam(value="dateFrom", required=false) Date dateFrom,
+			   @DateTimeFormat(pattern="yyyy-MM-dd") @RequestParam(value="dateTo", required=false) Date dateTo
 			   ) {
-			if(keyword !=null) {
-				
+	 		List<NewsArticle> news;
+			if(keyword ==null && dateFrom==null &&dateTo==null) {
+				news = getNewsService().findAllNews();
 			}
-				
-			List<NewsArticle> allNews = getNewsService().findNews(keyword,dateFrom,dateTo);
-			
-	        return allNews;
+			else {
+					news = getNewsService().findNews(keyword, dateFrom, dateTo);
+			}
+		
+	        return news;
 	    }
 	
 		/*
-		 *  This method fullfills the use cases:
+		 *  The following methods fulfill the use cases:
 		 *  allow an editor to create/update/delete an article  
 		*/
 		
@@ -76,7 +82,7 @@ public class NewsController {
 	    @ApiResponses(value = {
 	            @ApiResponse(code = 400, message = "Fields are with validation errors"),
 	            @ApiResponse(code = 201, message = "") })
-	    void addNews(@RequestParam(value="news", required=true) NewsArticle news) {
+	    void addNews(@RequestBody NewsArticle news) {
 			getNewsService().addNews(news);
 	    }
 		
@@ -86,7 +92,7 @@ public class NewsController {
 	    @ApiResponses(value = {
 	            @ApiResponse(code = 400, message = "Fields are with validation errors"),
 	            @ApiResponse(code = 201, message = "") })
-	    void updateNews(@RequestParam(value="news", required=true) NewsArticle news) {
+	    void updateNews(@RequestBody NewsArticle news) {
 			getNewsService().updateNews(news);
 	    }
 		
@@ -96,12 +102,12 @@ public class NewsController {
 	    @ApiResponses(value = {
 	            @ApiResponse(code = 400, message = "Wrong parameters"),
 	            @ApiResponse(code = 201, message = "") })
-	    void deleteNews(@RequestParam(value="id", required=true) String newsId) {
-			getNewsService().deleteNews(Long.valueOf(newsId));
+	    void deleteNews(@RequestParam(value="id", required=true) Long newsId) {
+			getNewsService().deleteNews(newsId);
 	    }
 		
 		/*
-		 * This method fullfills the use case:
+		 * This method fulfills the use case:
 		 * display one article  
 		 */
 		
@@ -111,7 +117,7 @@ public class NewsController {
 	            @ApiResponse(code = 400, message = "Wrong News Article ID"),
 	            @ApiResponse(code = 201, message = "") })
 	    @ResponseBody
-	    NewsArticle getNewsArticle(@RequestParam(value="id", required=true, defaultValue="0") String id) {
-			return getNewsService().getNews(Long.valueOf(id));
+	    NewsArticle getNewsArticle(@RequestParam(value="id", required=true) Long id) {
+			return getNewsService().getNews(id);
 	    }
 	}

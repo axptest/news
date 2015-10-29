@@ -3,13 +3,17 @@ package com.example.news.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class NewsArticle {
-	private Long id;
+	private long id;
 	private String header;
 	private String shortDesc;
 	private String text;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date publishDate;
-	private List<ArticleAuthor> authors;
+	private ArticleAuthor author;
 	private List<String> keywords;
 	
 	
@@ -38,11 +42,12 @@ public class NewsArticle {
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
-	public List<ArticleAuthor> getAuthors() {
-		return authors;
+	
+	public ArticleAuthor getAuthor() {
+		return author;
 	}
-	public void setAuthors(List<ArticleAuthor> authors) {
-		this.authors = authors;
+	public void setAuthor(ArticleAuthor author) {
+		this.author = author;
 	}
 	public List<String> getKeywords() {
 		return keywords;
