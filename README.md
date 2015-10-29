@@ -1,12 +1,11 @@
 # news app 
 
-
-Build instructions: The project is built with maven and oracle jdk 1.7.  
-Issuing a "mvn install" command in the app directory builds a target/news-jar-with-dependencies.jar that can be executed with  
-java -jar news-jar-with-dependencies.jar  
-This is console application and as such can be stopped with ctrl+c  
+Build instructions: The project is built with maven 3.2 and oracle jdk 1.7.  
+Issuing a "mvn package spring-boot:repackage" command in the app directory builds a target/news-0.0.1-SNAPSHOT.jar.that can be executed with  
+java -jar target/news-0.0.1-SNAPSHOT.jar  
+This is a tomcat console application and as such can be stopped with ctrl+c  
   
-After starting hitting the http://localhost:8080 should take you to the swagger interface and it contains documentation to the api
+The http://localhost:8080 should take you to the swagger interface and it contains documentation to the api
 Api is available at http://localhost:8080/api/
 there are two endpoints: news http://localhost:8080/api/news and author http://localhost:8080/api/author
   
